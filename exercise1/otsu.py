@@ -90,7 +90,8 @@ if __name__ == '__main__':
         raise FileNotFoundError("Cannot load the image.")
 
     # Compute Otsu's binarization or perform a custom binarization. Comment out one of the options.
-    # binarized_image, threshold = otsu_binarize(loaded_image)
+    #binarized_image, threshold = otsu_binarize(loaded_image)
+    #print("otsu threshold", threshold)
     binarized_image, threshold = custom_binarization(loaded_image, 180)
 
     # Display the original and the binarized image next to each other.
