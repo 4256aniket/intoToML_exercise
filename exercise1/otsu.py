@@ -16,27 +16,22 @@ def compute_histogram(image: np.ndarray) -> np.ndarray:
 
 def p_helper(prob: np.ndarray, theta: int) -> tuple[float, float]:
     # ToDo: Compute the class probabilities p0 and p1 for the current threshold theta.
-    p0 = np.sum(prob[:theta+1])  # Sum probabilities from 0 to theta
-    p1 = np.sum(prob[theta+1:])  # Sum probabilities from theta+1 to 255
+    p0 = np.sum(prob[:theta+1])  
+    p1 = np.sum(prob[theta+1:]) 
     
     return p0, p1
 
 
 def mu_helper(prob: np.ndarray, theta: int, p0: float, p1: float) -> tuple[float, float]:
     # ToDo: Compute the class means mu0 and mu1 for the current threshold theta.
-   
-    # Compute the class means mu0 and mu1 for the current threshold theta 
-    # Create array of intensity values [0, 1, 2, ..., 255]
     indices = np.arange(256)
-    
-    # Calculate mu0: weighted mean of intensities from 0 to theta
-    if p0 > 0:  # Avoid division by zero
+    if p0 > 0: 
         mu0 = np.sum(indices[:theta+1] * prob[:theta+1]) / p0
     else:
         mu0 = 0.0
-    
-    # Calculate mu1: weighted mean of intensities from theta+1 to 255
-    if p1 > 0:  # Avoid division by zero
+
+
+    if p1 > 0:  
         mu1 = np.sum(indices[theta+1:] * prob[theta+1:]) / p1
     else:
         mu1 = 0.0
@@ -47,36 +42,23 @@ def otsu_threshold(histogram: np.ndarray) -> int:
     # ToDo: Compute Otsu's threshold from a histogram using p_helper and mu_helper.
     # ToDo: Normalize the histogram to its probabilities (PDF).
     prob = histogram.astype(np.float64)
-
     # ToDo: Iterate over all possible thresholds, select the best one.
     # ToDo: Hint: Skip invalid splits (p0 == 0 or p1 == 0).
-
-    # Compute Otsu's threshold from a histogram using p_helper and mu_helper
-    
-    # Normalize the histogram to get probability distribution
     total_pixels = np.sum(histogram)
     prob = histogram.astype(np.float64) / total_pixels
-    
-    # Initialize variables to track best threshold
     max_variance = 0.0
     best_threshold = 0
     
-    # Iterate over all possible thresholds (0 to 254)
     for theta in range(255):
-        # Calculate class probabilities
         p0, p1 = p_helper(prob, theta)
-        
-        # Skip invalid splits
+ 
         if p0 == 0 or p1 == 0:
             continue
-        
-        # Calculate class means
+
         mu0, mu1 = mu_helper(prob, theta, p0, p1)
         
-        # Calculate between-class variance: p0 * p1 * (mu1 - mu0)^2
         variance = p0 * p1 * ((mu1 - mu0) ** 2)
         
-        # Update if current variance is better
         if variance > max_variance:
             max_variance = variance
             best_threshold = theta
@@ -88,13 +70,8 @@ def otsu_threshold(histogram: np.ndarray) -> int:
 def otsu_binarize(image: np.ndarray) -> tuple[np.ndarray, int]:
     # ToDo: Binarize the threshold image.
     # ToDo: Simply combine the existing functions.
-    # Compute histogram
     hist = compute_histogram(image)
-    
-    # Find optimal threshold
     theta = otsu_threshold(hist)
-    
-    # Apply thresholding (pixels > theta become 255, others become 0)
     new_image = np.where(image > theta, 255, 0).astype(np.uint8)
     
     return new_image, theta

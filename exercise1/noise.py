@@ -17,28 +17,21 @@ def save_image(image: np.ndarray, file_path: str) -> None:
 
 
 def add_gaussian_noise(image: np.ndarray, mean: float = 0.0, sigma: float = 10.0) -> np.ndarray:
-    # Generate Gaussian noise with the same shape as the image
+
     noise = np.random.normal(mean, sigma, image.shape)
-    
-    # Convert image to float for adding noise
+
     noisy_image = image.astype(np.float64) + noise
     
-    # Clip values to valid range [0, 255] and convert back to uint8
     noisy_image = np.clip(noisy_image, 0, 255).astype(np.uint8)
     
     return noisy_image
 
 
 def add_salt_and_pepper_noise(image: np.ndarray, salt_prob: float = 0.01, pepper_prob: float = 0.01) -> np.ndarray:
-    # Create a copy of the image to avoid modifying the original
     noisy_image = np.copy(image)
-    
-    # Generate random values with the same shape as the image
     random_matrix = np.random.random(image.shape)
-    
     # Add salt (white) noise
     noisy_image[random_matrix < salt_prob] = 255
-    
     # Add pepper (black) noise
     noisy_image[(random_matrix >= salt_prob) & (random_matrix < salt_prob + pepper_prob)] = 0
     
@@ -46,36 +39,23 @@ def add_salt_and_pepper_noise(image: np.ndarray, salt_prob: float = 0.01, pepper
 
 
 def add_poisson_noise(image: np.ndarray) -> np.ndarray:
-    # Convert image to float for calculation
     image_float = image.astype(np.float64)
-    
-    # Add 1 to avoid zero values which could cause issues with Poisson sampling
     image_float = np.maximum(image_float, 1.0)
-    
-    # Generate Poisson samples using the pixel values as the lambda parameter
     noisy_image = np.random.poisson(image_float)
-    
-    # Clip values to valid range and convert back to uint8
     noisy_image = np.clip(noisy_image, 0, 255).astype(np.uint8)
     
     return noisy_image
 
 
 def add_uniform_noise(image: np.ndarray, low: float = -20.0, high: float = 20.0) -> np.ndarray:
-    # Generate uniform noise with the same shape as the image
     noise = np.random.uniform(low, high, image.shape)
-    
-    # Convert image to float for adding noise
     noisy_image = image.astype(np.float64) + noise
-    
-    # Clip values to valid range [0, 255] and convert back to uint8
     noisy_image = np.clip(noisy_image, 0, 255).astype(np.uint8)
     
     return noisy_image
 
 
 def display_images(original: np.ndarray, processed: np.ndarray, title: str) -> None:
-    # Transform the colour image (BGR) into an RGB image.
     def to_rgb(image):
         return cv2.cvtColor(image, cv2.COLOR_BGR2RGB) if image.ndim == 3 else image
 

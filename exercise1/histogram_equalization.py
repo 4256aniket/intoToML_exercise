@@ -55,9 +55,7 @@ def equalize_image(image: np.ndarray, cdf: np.ndarray) -> np.ndarray:
             equalized_flat[i] = np.round(((cdf[pixel] - cdf_min) / (1 - cdf_min)) * 255)
         else:
             equalized_flat[i] = pixel
-
-        # Reshape back to original image dimensions
-    
+            
     equalized_image = equalized_flat.reshape(image.shape)
     return equalized_image
 
