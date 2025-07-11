@@ -49,9 +49,8 @@ def equalize_image(image: np.ndarray, cdf: np.ndarray) -> np.ndarray:
     
     equalized_flat = np.zeros_like(flattened_image, dtype=np.uint8)
     
-    # Apply transformation formula: pixelvalue_new = ⌊(C(pixelvalue_old) - C_min)/(1 - C_min) · 255⌋
     for i, pixel in enumerate(flattened_image):
-        if 1 - cdf_min > 0:  # Avoid division by zero
+        if 1 - cdf_min > 0: 
             equalized_flat[i] = np.round(((cdf[pixel] - cdf_min) / (1 - cdf_min)) * 255)
         else:
             equalized_flat[i] = pixel
