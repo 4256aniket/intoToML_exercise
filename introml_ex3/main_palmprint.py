@@ -68,7 +68,6 @@ print("DR: " + format(np.round(DR_yz / samplingSize, 1)))
 print("DTheta :" + format(np.round(DTheta_yz, 1)))
 
 
-# plotting comparison images of preprocessing
 FinalFig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3)
 ax1.imshow(img1, 'gray')
 ax1.axis('off')
